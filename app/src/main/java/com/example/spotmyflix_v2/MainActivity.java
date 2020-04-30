@@ -21,6 +21,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     RequestQueue queue = Volley.newRequestQueue(this);
     String url = "https://api.spotify.com/v1/playlists/{playlist_id}";
+    int test = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
