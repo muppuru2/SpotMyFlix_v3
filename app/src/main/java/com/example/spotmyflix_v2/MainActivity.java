@@ -1,6 +1,10 @@
 package com.example.spotmyflix_v2;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,6 +29,23 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-    }
 
+        Button button1 = (Button) findViewById(R.id.suggestion);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.i("MyApp", "Watch Arrested Development");
+                Toast.makeText(getApplicationContext(), "Watch Arrested Development", Toast.LENGTH_LONG)
+                        .show();
+//                System.out.println("Watch Arrested Development");
+            }
+        });
+    }
+    public void sendMessage(View view) {
+        Button button1 = (Button) findViewById(R.id.suggestion);
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("Watch Arrested Development");
+            }
+        });
+    }
 }
