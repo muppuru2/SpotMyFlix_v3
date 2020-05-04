@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private RequestQueue queue = Volley.newRequestQueue(this);
+    private RequestQueue queue;
     private String id;
     private JSONObject playlist;
     private String userId;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        queue = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
      * idk how to do this not randomly without them either knowing the playlist id or typing in the name correctly
      * random is kind of fun though
      */
-    public void getPlaylist(){
+    public void getPlaylist() {
         String url = "https://api.spotify.com/v1/users/" + userId + "/playlists";
         JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
