@@ -36,10 +36,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private RequestQueue queue = Volley.newRequestQueue(this);
+//    private RequestQueue queue = Volley.newRequestQueue(this);
     private String id;
     private JSONObject playlist;
     private String userId;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private String playlistID;
     private String playlistName;
+    final private Map<String, String[]> matches = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         button = findViewById(R.id.buttonPrompt);
-
+        setMatches();
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
-
         getPlaylist();
     }
 
@@ -187,6 +189,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void setMatches() {
+        String[] rock = {"Arrested Development", "Breaking Bad", "Peaky Blinders"};
+        matches.put("rock", rock);
+        String[] edm = {"Naruto", "Bleach", "Attack on Titan"};
+        matches.put("edm", edm);
+        String[] pop = {"New Girl", "Gossip Girl", "Outer Banks"};
+        matches.put("pop", pop);
+        String[] jazz = {"Parks And Recreation", "The Great British Baking Show", "The Blacklist"};
+        matches.put("jazz", jazz);
+        String[] rnb = {"Too Hot to Handle", "The 100", "Chill with Bob Ross"};
+        matches.put("rnb", rnb);
+        String[] hiphop = {"Community", "Schitt's Creek", "Shameless"};
+        matches.put("hiphop", hiphop);
+        String[] country = {"How to Get Away With Murder", "The Punisher", "Outer Banks"};
+        matches.put("country", country);
+        String[] indie = {"Mad Men", "Criminal Minds", "Bojack Horseman"};
+        matches.put("indie", indie);
+        String[] classical = {"Sherlock", "Glee", "Portlandia"};
+        matches.put("classical", classical);
+        String[] other = {"The Office", "Stranger Things", "Black Mirror"};
+        matches.put("other", other);
     }
 
 }
