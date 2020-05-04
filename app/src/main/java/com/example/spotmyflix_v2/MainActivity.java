@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private String userId;
     final Context context = this;
     private Button button;
+    private String playlistID;
+    private String playlistName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
                     Random random = new Random();
                     int randomNum = random.nextInt(numLists - 1);
                     playlist = (JSONObject) response.get(randomNum);
+                    playlistID = playlist.get("id").toString();
+//                  playlistName = playlist.get("name");
                 } catch (JSONException e) {
                     Log.e("Main Activity", "There was an error parsing the JSON array");
                 }
@@ -140,4 +144,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void getGenre() {
+        String url = "https://api.spotify.com/v1/users/playlists/" + playlistID + "/tracks";
+        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    int numTracks = response.length();
+                    for (int i = 0; i < numTracks; i++) {
+                        JSONObject track = (JSONObject) response.get(i);
+                        JSONObject album = (JSONObject) track.get("album");
+                        JSONObject external_urls = (JSONObject) album.get("external_urls");
+                        String spotifyURL = external_urls.get("spotify").toString();
+                        int slash = spotifyURL.lastIndexOf("/");
+                        String albumID = spotifyURL.substring(slash + 1);
+                        String albumURL = "https://api.spotify.com/v1/albums/" + albumID;
+                        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, albumURL, null, new Response.Listener<JSONArray>() {
+                            @Override
+                            public void onResponse(JSONArray response) {
+//                                try {
+//
+//                                } catch (JSONException e) {
+//                                    Log.e("Main Activity", "There was an error parsing the JSON array");
+//                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("Main Activity", "There was an error loading your playlists. Please try again");
+                            }
+                        });
+                    }
+                } catch (JSONException e) {
+                    Log.e("Main Activity", "There was an error parsing the JSON array");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Main Activity", "There was an error loading your playlists. Please try again");
+            }
+        });
+
+    }
+
 }

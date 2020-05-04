@@ -23,8 +23,11 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
+//        final TextView textView = root.findViewById(R.id.text_home);
+//        bro idek what this is but it was throwing an error so I changed it. ^ That's the original.
+        final TextView textView = root.findViewById(R.id.text_dashboard);
+//      the thing underneath's first parameter used to be "this" FYI.
+        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
