@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -41,7 +42,7 @@ import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-//    private RequestQueue queue = Volley.newRequestQueue(this);
+    private RequestQueue queue = Volley.newRequestQueue(this);
     private String id;
     private JSONObject playlist;
     private String userId;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private String playlistID;
     private String playlistName;
     final private Map<String, String[]> matches = new HashMap<>();
+    private Map<String, Integer> genreInts = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.buttonPrompt);
         setMatches();
+        setUpGenres();
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String url = userInput.getText().toString();
                         getUserId(url);
+                        Log.i("print", userId);
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -94,16 +98,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getPlaylist();
-    }
-
-
-    public void sendMessage(View view) {
-        Button button1 = (Button) findViewById(R.id.suggestion);
-        button1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("Watch Arrested Development");
-            }
-        });
+        getGenre();
+        Log.i("output", genreInts.toString());
     }
 
     /**
@@ -135,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     playlist = (JSONObject) response.get(randomNum);
                     playlistID = playlist.get("id").toString();
 //                  playlistName = playlist.get("name");
+                    Log.i("print", playlistID);
                 } catch (JSONException e) {
                     Log.e("Main Activity", "There was an error parsing the JSON array");
                 }
@@ -145,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Main Activity", "There was an error loading your playlists. Please try again");
             }
         });
+        queue.add(arrayRequest);
     }
 
     public void getGenre() {
@@ -162,21 +160,27 @@ public class MainActivity extends AppCompatActivity {
                         int slash = spotifyURL.lastIndexOf("/");
                         String albumID = spotifyURL.substring(slash + 1);
                         String albumURL = "https://api.spotify.com/v1/albums/" + albumID;
-                        JsonArrayRequest arrayRequest = new JsonArrayRequest(Request.Method.GET, albumURL, null, new Response.Listener<JSONArray>() {
+                        JsonObjectRequest albumRequest = new JsonObjectRequest(Request.Method.GET, albumURL, null, new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(JSONArray response) {
-//                                try {
-//
-//                                } catch (JSONException e) {
-//                                    Log.e("Main Activity", "There was an error parsing the JSON array");
-//                                }
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    JSONArray arrjson = response.getJSONArray("genres");
+                                    String[] genres = new String[arrjson.length()];
+                                    for (int i = 0; i < arrjson.length(); i++) {
+                                        genres[i] = arrjson.getString(i);
+                                    }
+                                    parseGenres(genres);
+                                } catch (JSONException e) {
+                                    Log.e("Main Activity", "There was an error parsing the JSON array");
+                                }
                             }
                         }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("Main Activity", "There was an error loading your playlists. Please try again");
-                            }
-                        });
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Main Activity", "There was an error loading your tracks. Please try again");
+                        }
+                    });
+                        queue.add(albumRequest);
                     }
                 } catch (JSONException e) {
                     Log.e("Main Activity", "There was an error parsing the JSON array");
@@ -185,9 +189,53 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("Main Activity", "There was an error loading your playlists. Please try again");
+                Log.e("Main Activity", "There was an error loading your tracks. Please try again");
             }
         });
+        queue.add(arrayRequest);
+    }
+
+
+    public void parseGenres(String[] genres) {
+        for (int i = 0; i < genres.length; i++) {
+            String g = genres[i];
+            if (g.contains("rock")) {
+                int current = genreInts.get("rock");
+                genreInts.put("rock", current++);
+            }
+            if (g.contains("electr")) {
+                int current = genreInts.get("edm");
+                genreInts.put("edm", current++);
+            }
+            if (g.contains("pop")) {
+                int current = genreInts.get("pop");
+                genreInts.put("pop", current++);
+            }
+            if (g.contains("jazz")) {
+                int current = genreInts.get("jazz");
+                genreInts.put("jazz", current++);
+            }
+            if (g.contains("r&b")) {
+                int current = genreInts.get("rnb");
+                genreInts.put("rnb", current++);
+            }
+            if (g.contains("rap")) {
+                int current = genreInts.get("hiphop");
+                genreInts.put("hiphop", current++);
+            }
+            if (g.contains("country")) {
+                int current = genreInts.get("country");
+                genreInts.put("country", current++);
+            }
+            if (g.contains("indie")) {
+                int current = genreInts.get("indie");
+                genreInts.put("indie", current++);
+            }
+            if (g.contains("classical")) {
+                int current = genreInts.get("classical");
+                genreInts.put("classical", current++);
+            }
+        }
     }
 
     public void setMatches() {
@@ -211,5 +259,22 @@ public class MainActivity extends AppCompatActivity {
         matches.put("classical", classical);
         String[] other = {"The Office", "Stranger Things", "Black Mirror"};
         matches.put("other", other);
+    }
+
+    public void setUpGenres() {
+        genreInts.put("rock", 0);
+        genreInts.put("edm", 0);
+        genreInts.put("pop", 0);
+        genreInts.put("jazz", 0);
+        genreInts.put("rnb", 0);
+        genreInts.put("hiphop", 0);
+        genreInts.put("country", 0);
+        genreInts.put("indie", 0);
+        genreInts.put("classical", 0);
+        genreInts.put("other", 0);
+    }
+
+    public void generateRecommendation() {
+
     }
 }
