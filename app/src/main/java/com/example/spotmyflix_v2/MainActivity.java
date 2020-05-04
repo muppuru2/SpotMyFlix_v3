@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Main Activity", "There was an error loading your playlists. Please try again");
             }
         });
-
     }
 
     public void setMatches() {
@@ -213,5 +212,4 @@ public class MainActivity extends AppCompatActivity {
         String[] other = {"The Office", "Stranger Things", "Black Mirror"};
         matches.put("other", other);
     }
-
 }
