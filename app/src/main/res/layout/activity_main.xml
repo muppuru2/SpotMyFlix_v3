@@ -52,19 +52,25 @@
             android:layout_height="227dp"
             android:layout_marginTop="100dp"
             android:layout_marginBottom="258dp"
-            android:background="#009688"
+            android:background="#1db954"
             android:text="Generate Suggestions"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nav_host_fragment" />
+            app:layout_constraintTop_toTopOf="@+id/nav_host_fragment"
+            android:textSize="30sp"
+            android:textColor="#000000"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/editTextResult"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+
+            >
 
         </EditText>
 

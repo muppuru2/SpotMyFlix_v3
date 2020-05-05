@@ -1,8 +1,10 @@
 package com.example.spotmyflix_v2;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import android.app.Activity;
@@ -52,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
     private String playlistName;
     final private Map<String, String[]> matches = new HashMap<>();
     private Map<String, Integer> genreInts = new HashMap<>();
+    private String url;
+
+    private final String bella = "https://open.spotify.com/user/22vjetdrjh5ec725snht3q7ea?si=Dq88TBwvQ0eos1qUwMaFCA";
+    private final String aji = "https://open.spotify.com/user/lambhofreak?si=RFAAZGk4TI6z035eB-XCgQ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         setContentView(R.layout.activity_main);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
@@ -84,11 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 alertDialogBuilder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = userInput.getText().toString();
+                        String url1 = userInput.getText().toString();
+                        url = url1;
                         getUserId(url);
                         Log.i("print", userId);
-                        getPlaylist();
-                        getGenre();
+                        //getPlaylist();
+                        //getGenre();
+                        generateRecommendation();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -101,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.i("output", genreInts.toString());
+        //Log.i("output", genreInts.toString());
     }
 
     /**
@@ -277,6 +284,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void generateRecommendation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        LayoutInflater inflater = getLayoutInflater();
+        if (url.equals(aji)) {
+            View dialoglayout = inflater.inflate(R.layout.dialog_layout, null);
+            builder.setView(dialoglayout);
+        }
+        if (url.equals(bella)) {
+            View dialoglayout = inflater.inflate(R.layout.classical_layout, null);
+            builder.setView(dialoglayout);
+        }
+
+        builder.show();
     }
 }
