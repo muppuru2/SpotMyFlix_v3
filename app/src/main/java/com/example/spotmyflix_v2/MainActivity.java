@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
                         String url = userInput.getText().toString();
                         getUserId(url);
                         Log.i("print", userId);
+                        getPlaylist();
+                        getGenre();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -98,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
-        getPlaylist();
-        getGenre();
+
         Log.i("output", genreInts.toString());
     }
 
